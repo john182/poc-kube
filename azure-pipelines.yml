@@ -24,6 +24,7 @@ stages:
       displayName: Build an image
       inputs:
         command: build
+        repository: 'john182/poc-kube'
         dockerfile: '$(Build.SourcesDirectory)/PocKube.API/Dockerfile'
         tags: |
           $(tag)
