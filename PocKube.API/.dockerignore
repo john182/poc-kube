@@ -1,0 +1,25 @@
+# CSHARP
+**/[Bb]in/
+**/[Oo]bj/
+**/[Dd]ebug/
+**/[Rr]elease/
+**/[Tt]est/
+**/[Dd]ocs/
+**/*.sln
+
+# LOG
+*.log
+
+# NUGET
+[Nn]uget.[Cc]onfig
+
+# DOCKER
+[Dd]ocker[Ff]ile
+[Dd]ocker-[Cc]ompose.yaml
+[Dd]ocker-[Cc]ompose.yml
+
+# OTHER
+**/*.[Gg]itignore
+**/*.[Mm][Dd]
+[Bb]uild.sh
+[Dd]eploy.sh
