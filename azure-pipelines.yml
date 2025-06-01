@@ -10,6 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
+  dockerImage: john182/poc-kube
 
 stages:
 - stage: CI
@@ -24,8 +25,16 @@ stages:
       displayName: Build an image
       inputs:
         command: build
-        repository: 'john182/poc-kube'
+        repository: $(dockerImage)
         dockerfile: '$(Build.SourcesDirectory)/PocKube.API/Dockerfile'
+        tags: |
+          $(tag)
+          latest
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'John DockerHub'
+        repository: $(dockerImage)
+        command: 'push'
         tags: |
           $(tag)
           latest
