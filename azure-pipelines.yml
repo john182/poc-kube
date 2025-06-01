@@ -11,6 +11,9 @@ resources:
 variables:
   tag: '$(Build.BuildId)'
   dockerImage: johnvanderson/poc-kube
+  buildConfiguration: 'Release'
+  DOTNET_PROJECT_PATH: '**/*PocKube.API.csproj'
+  PublishVariant: 'alpine-x64'
 
 stages:
 - stage: CI
@@ -38,3 +41,10 @@ stages:
         tags: |
           $(tag)
           latest
+    - task: PublishBuildArtifacts@1
+      displayName: 'treasury.risk.autoassign-publish'
+      inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
+
