@@ -1,4 +1,4 @@
-FROM "mcr.microsoft.com/dotnet/aspnet:8.0"
+FROM "mcr.microsoft.com/dotnet/aspnet:8.0-alpine"
 
 ARG DOCKER_EXPOSE_PORT
 ARG DOTNET_DIST_PATH
