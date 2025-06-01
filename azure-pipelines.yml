@@ -41,8 +41,15 @@ stages:
         tags: |
           $(tag)
           latest
+    - task: DotNetCoreCLI@2
+      displayName: dotnet publish
+      inputs:
+        command: publish
+        publishWebProjects: false
+        projects: $(DOTNET_PROJECT_PATH)
+        arguments: '--configuration $(BuildConfiguration) --runtime $(PublishVariant) --no-build --output $(Build.ArtifactStagingDirectory) --no-self-contained'      
     - task: PublishBuildArtifacts@1
-      displayName: 'treasury.risk.autoassign-publish'
+      displayName: 'poc-kube-publish'
       inputs:
           PathtoPublish: '$(Build.ArtifactStagingDirectory)'
           ArtifactName: 'drop'
