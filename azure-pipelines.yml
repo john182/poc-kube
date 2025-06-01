@@ -10,7 +10,7 @@ resources:
 
 variables:
   tag: '$(Build.BuildId)'
-  dockerImage: john182/poc-kube
+  dockerImage: johnvanderson/poc-kube
 
 stages:
 - stage: CI
