@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: #{AKS_LABEL}#
+  namespace: #{AKS_LABEL}#
+  labels:
+    app: #{AKS_LABEL}#
+spec:
+  revisionHistoryLimit: #{AKS_REVISION_HISTORY_LIMIT}#
+  replicas: #{AKS_REPLICAS}#
+  selector:
+    matchLabels:
+      app: #{AKS_LABEL}#
+  template:
+    metadata:
+      labels:
+        app: #{AKS_LABEL}#
+    spec:
+      containers:
+        - name: "#{DOCKER_CONTAINER}#"
+          image: "#{ACR_IMAGE}#"
+          ports:
+            - containerPort: #{DOCKER_EXPOSE_PORT}#
+          resources:
+            requests:
+              cpu: #{AKS_REQUESTS_CPU}#
+              memory: #{AKS_REQUESTS_MEMORY}#
+            limits:
+              cpu: #{AKS_LIMITS_CPU}#
+              memory: #{AKS_LIMITS_MEMORY}#
+          readinessProbe:
+            tcpSocket:
+              port: #{DOCKER_EXPOSE_PORT}#
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: #{AKS_HEALTHCHECK_PATH}#
+              port: #{DOCKER_EXPOSE_PORT}#
+            initialDelaySeconds: 10
+            timeoutSeconds: 30
+            periodSeconds: 60
+          envFrom:
+            - configMapRef:
+                name: #{AKS_LABEL}#
+            - secretRef:
+                name: #{AKS_LABEL}#    
