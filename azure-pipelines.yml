@@ -6,10 +6,15 @@ name: $(Date:yyyyMMdd)_Build_$(Rev:r)
 pool:
   vmImage: ubuntu-latest
 variables:
-  CONFIGURATION: 'Release'
-  RUNTIME: 'linux-musl-x64'
-  API_PROJECT_PATH: '**/PocKube.API.csproj'
-  TEST_PROJECT_PATH: '**/PocKube.Test.csproj'
+  - group: Teste
+  - name: CONFIGURATION
+    value: 'Release'
+  - name: RUNTIME
+    value: 'linux-musl-x64'
+  - name: API_PROJECT_PATH
+    value: '**/PocKube.API.csproj'
+  - name: TEST_PROJECT_PATH
+    value: '**/PocKube.Test.csproj'
 steps:
   - task: UseDotNet@2
     displayName: 'dotnet version 8.0'
