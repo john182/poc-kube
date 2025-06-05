@@ -61,5 +61,5 @@ steps:
   - task: PublishBuildArtifacts@1
     displayName: 'azdevops publish build artifacts'
     inputs:
-      PathtoPublish: '$(Build.ArtifactStagingDirectory)/PocKube.API/Kubernetes'
+      PathtoPublish: '$(Build.SourcesDirectory)/PocKube.API/Kubernetes'
       ArtifactName: 'poc-kub-api'
