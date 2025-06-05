@@ -92,3 +92,36 @@ stages:
             inputs:
               PathtoPublish: '$(Build.SourcesDirectory)/PocKube.API/Kubernetes'
               ArtifactName: 'poc-kub-api'
+
+  - stage: Deploy
+    displayName: Deploy Stage
+    dependsOn: Build
+    jobs:
+      - deployment: DeployToK8s
+        displayName: Deploy to Kubernetes
+        environment: 'staging'
+        pool:
+          vmImage: ubuntu-latest
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                # Primeiro deploy do Secret (imagePullSecret)
+                - task: KubernetesManifest@0
+                  displayName: Deploy Kubernetes Secret
+                  inputs:
+                    action: deploy
+                    manifests: '$(Pipeline.Workspace)/k8s-manifests/secret.yaml'
+
+                # Deploy do app com deployment e service e referenciando o secret
+                - task: KubernetesManifest@0
+                  displayName: Deploy App to Kubernetes
+                  inputs:
+                    action: deploy
+                    manifests: |
+                      $(Pipeline.Workspace)/k8s-manifests/deployment.yaml
+                      $(Pipeline.Workspace)/k8s-manifests/service.yaml
+                    imagePullSecrets: |
+                      regcred
+                    containers: |
+                      $(CONTAINER_REPOSITORY):$(IMAGE_TAG)
