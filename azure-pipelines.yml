@@ -26,10 +26,10 @@ stages:
       vmImage: ubuntu-latest
     steps:
     - task: UseDotNet@2
-        displayName: 'dotnet version 8.0'
-        inputs:
-          packageType: 'sdk'
-          version: '8.0.x'
+      displayName: 'dotnet version 8.0'
+      inputs:
+        packageType: 'sdk'
+        version: '8.0.x'
     - task: Docker@2
       displayName: Build an image
       inputs:
