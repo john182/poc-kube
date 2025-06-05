@@ -24,8 +24,6 @@ steps:
         $(API_PROJECT_PATH)
         $(TEST_PROJECT_PATH)
       restoreArguments: '--ignore-failed-sources --runtime $(RUNTIME)'
-      feedsToUse: 'config'
-      nugetConfigPath: 'nuget.config'
   - task: DotNetCoreCLI@2
     displayName: 'dotnet build'
     inputs:
