@@ -17,8 +17,7 @@ steps:
       packageType: 'sdk'
       version: '8.0.x'
   - task: DotNetCoreCLI@2
-    condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
-    displayName: 'dotnet restore (stg)'
+    displayName: 'dotnet restore'
     inputs:
       command: 'restore'
       projects: |
