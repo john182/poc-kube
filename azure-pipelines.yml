@@ -56,8 +56,8 @@ steps:
       containerRegistry: 'John DockerHub'
       repository: 'johnvanderson/poc-kube'
       command: 'buildAndPush'
-      Dockerfile: '$(Build.ArtifactStagingDirectory)/PocKube.API/Dockerfile'
-      buildContext: '$(Build.ArtifactStagingDirectory)/PocKube.API.Api'
+      Dockerfile: '$(Build.SourcesDirectory)/PocKube.API/Dockerfile'
+      buildContext: '$(Build.SourcesDirectory)/PocKube.API.Api'
       tags: |
         $(Build.BuildNumber)
         latest
