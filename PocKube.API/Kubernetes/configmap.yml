@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: #{AKS_LABEL}#
+  namespace: #{AKS_LABEL}#
+  labels:
+    app: #{AKS_LABEL}#
+data:
+  ASPNETCORE_ENVIRONMENT: "#{ASPNETCORE_ENVIRONMENT}#"
+  ASPNETCORE_URLS: "#{ASPNETCORE_URLS}#"
+  Api__Routes__Base: "#{ROUTES_BASE}#"

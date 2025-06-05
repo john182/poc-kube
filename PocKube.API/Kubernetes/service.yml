@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: #{AKS_LABEL}#
+  namespace: #{AKS_LABEL}#
+spec:
+  type: ClusterIP
+  ports:
+  - port: #{DOCKER_EXPOSE_PORT}#
+  selector:
+    app: #{AKS_LABEL}#

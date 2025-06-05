@@ -1,0 +1,15 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: #{AKS_LABEL}#
+  namespace: #{AKS_LABEL}#
+  labels:
+    app: #{AKS_LABEL}#
+spec:
+  maxReplicas: #{AKS_MAX_REPLICAS}#
+  minReplicas: #{AKS_MIN_REPLICAS}#
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: #{AKS_LABEL}#
+  targetCPUUtilizationPercentage: #{AKS_SCALING_TARGET_CPU_UTILIZATION}#
