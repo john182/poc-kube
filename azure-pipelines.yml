@@ -1,63 +1,77 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
-- master
+  - 'master'
+pr:
+  - '*'
 name: $(Date:yyyyMMdd)_Build_$(Rev:r)
-resources:
-- repo: self
-
-variables:
-  tag: '$(Build.BuildId)'
-  dockerImage: johnvanderson/poc-kube
-  BuildConfiguration: 'Release'
-  DOTNET_PROJECT_PATH: '**/*PocKube.API.csproj'
-  RUNTIME: 'linux-musl-x64'
 pool:
-    vmImage: 'ubuntu-latest'
-stages:
-- stage: CI
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: UseDotNet@2
-      displayName: 'dotnet version 8.0'
-      inputs:
-        packageType: 'sdk'
-        version: '8.0.x'
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        repository: $(dockerImage)
-        dockerfile: '$(Build.SourcesDirectory)/PocKube.API/Dockerfile'
-        tags: |
-          $(tag)
-          latest
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'John DockerHub'
-        repository: $(dockerImage)
-        command: 'push'
-        tags: |
-          $(tag)
-          latest
-    - task: DotNetCoreCLI@2
-      displayName: dotnet publish
-      inputs:
-        command: publish
-        publishWebProjects: false
-        projects: $(DOTNET_PROJECT_PATH)
-        arguments: '--configuration $(BuildConfiguration) --runtime $(PublishVariant) --no-build --output $(Build.ArtifactStagingDirectory) --no-self-contained'      
-    - task: PublishBuildArtifacts@1
-      displayName: 'poc-kube-publish'
-      inputs:
-          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-          ArtifactName: 'drop'
-          publishLocation: 'Container'
-
+  vmImage: ubuntu-latest
+variables:
+  CONFIGURATION: 'Release'
+  RUNTIME: 'linux-musl-x64'
+  API_PROJECT_PATH: '**/PocKube.API.csproj'
+  TEST_PROJECT_PATH: '**/PocKube.Test.csproj'
+steps:
+  - task: UseDotNet@2
+    displayName: 'dotnet version 8.0'
+    inputs:
+      packageType: 'sdk'
+      version: '8.0.x'
+  - task: DotNetCoreCLI@2
+    condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
+    displayName: 'dotnet restore (stg)'
+    inputs:
+      command: 'restore'
+      projects: |
+        $(API_PROJECT_PATH)
+        $(TEST_PROJECT_PATH)
+      restoreArguments: '--ignore-failed-sources --runtime $(RUNTIME)'
+      feedsToUse: 'config'
+      nugetConfigPath: 'nuget.config'
+  - task: DotNetCoreCLI@2
+    condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+    displayName: 'dotnet restore (prd)'
+    inputs:
+      command: 'restore'
+      projects: |
+        $(API_PROJECT_PATH)
+        $(TEST_PROJECT_PATH)
+      restoreArguments: '--ignore-failed-sources --runtime $(RUNTIME)'
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet build'
+    inputs:
+      command: 'build'
+      projects: |
+        $(API_PROJECT_PATH)
+        $(TEST_PROJECT_PATH)
+      arguments: '--configuration $(CONFIGURATION) --runtime $(RUNTIME) --no-restore --no-self-contained'
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet test'
+    inputs:
+      command: 'test'
+      projects: '$(TEST_PROJECT_PATH)'
+      arguments: '--configuration $(CONFIGURATION) --runtime $(RUNTIME) --no-build /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:Exclude=[xunit.*]*'
+  - task: DotNetCoreCLI@2
+    displayName: 'dotnet publish'
+    inputs:
+      command: 'publish'
+      publishWebProjects: false
+      projects: |
+        $(API_PROJECT_PATH)
+      arguments: '--configuration $(CONFIGURATION) --runtime $(RUNTIME) --self-contained --output $(Build.ArtifactStagingDirectory)'
+      zipAfterPublish: false
+  - task: Docker@2
+    displayName: 'docker build and push (stg)'
+    inputs:
+      containerRegistry: 'John DockerHub'
+      repository: 'johnvanderson/poc-kube'
+      command: 'buildAndPush'
+      Dockerfile: '$(Build.ArtifactStagingDirectory)/PocKube.API/Dockerfile'
+      buildContext: '$(Build.ArtifactStagingDirectory)/PocKube.API.Api'
+      tags: |
+        $(Build.BuildNumber)
+        latest
+  - task: PublishBuildArtifacts@1
+    displayName: 'azdevops publish build artifacts'
+    inputs:
+      PathtoPublish: '$(Build.ArtifactStagingDirectory)/PocKube.API/Kubernetes'
+      ArtifactName: 'poc-kub-api'
