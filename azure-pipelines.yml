@@ -58,8 +58,17 @@ steps:
       tags: |
         $(Build.BuildNumber)
         latest
+
+  - task: replacetokens@6
+    inputs:
+      root: '$(Build.SourcesDirectory)/PocKube.API/Kubernetes'
+      sources: |
+        configmap.yml
+        secret.yml
+  
   - task: PublishBuildArtifacts@1
     displayName: 'azdevops publish build artifacts'
     inputs:
       PathtoPublish: '$(Build.SourcesDirectory)/PocKube.API/Kubernetes'
       ArtifactName: 'poc-kub-api'
+      
