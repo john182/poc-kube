@@ -110,7 +110,7 @@ stages:
                 - download: current
                   artifact: poc-kub-api
                 - script: |
-                    echo "Listando arquivos em $(Pipeline.Workspace)/poc-kub-api/Kubernetes"
+                    echo "Listando arquivos em $(Pipeline.Workspace)/poc-kub-api"
                     ls -la $(Pipeline.Workspace)/poc-kub-api/
                   displayName: 'Verificar arquivos do artefato'
                   
@@ -120,7 +120,7 @@ stages:
                   inputs:
                     action: deploy
                     kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
-                    manifests: '$(Pipeline.Workspace)/poc-kub-api/Kubernetes/secret.yml'
+                    manifests: '$(Pipeline.Workspace)/poc-kub-api/secret.yml'
 
                 # Deploy do app
                 - task: KubernetesManifest@1
@@ -129,8 +129,8 @@ stages:
                     action: deploy
                     kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
                     manifests: |
-                      $(Pipeline.Workspace)/poc-kub-api/Kubernetes/deployment.yaml
-                      $(Pipeline.Workspace)/poc-kub-api/Kubernetes/service.yaml
+                      $(Pipeline.Workspace)/poc-kub-api/deployment.yaml
+                      $(Pipeline.Workspace)/poc-kub-api/service.yaml
                     containers: |
                       $(CONTAINER_REPOSITORY):$(IMAGE_TAG)
                     imagePullSecrets: |
