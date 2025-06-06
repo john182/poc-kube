@@ -75,7 +75,7 @@ stages:
               repository: 'johnvanderson/poc-kube'
               command: 'buildAndPush'
               dockerfile: '$(Build.SourcesDirectory)/PocKube.API/Dockerfile'
-              buildContext: '$(Build.SourcesDirectory)/PocKube.API'
+              buildContext: '$(Build.ArtifactStagingDirectory)'
               tags: |
                 $(Build.BuildNumber)
                 latest
