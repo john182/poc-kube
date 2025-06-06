@@ -121,7 +121,7 @@ stages:
                   displayName: Deploy Kubernetes Secret
                   inputs:
                     action: deploy
-                    kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
+                    kubernetesServiceConnection: 'KubExterno'
                     namespace: $(AKS_LABEL)
                     manifests: '$(Pipeline.Workspace)/poc-kub-api/secret.yml'
 
@@ -130,7 +130,7 @@ stages:
                   displayName: Deploy App to Kubernetes 
                   inputs:
                     action: deploy
-                    kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
+                    kubernetesServiceConnection: 'KubExterno'
                     namespace: $(AKS_LABEL)
                     manifests: |
                       $(Pipeline.Workspace)/poc-kub-api/deployment.yaml
@@ -139,4 +139,3 @@ stages:
                       $(CONTAINER_REPOSITORY):$(IMAGE_TAG)
                     imagePullSecrets: |
                       regcred
-                      
