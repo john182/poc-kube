@@ -76,6 +76,8 @@ stages:
               command: 'buildAndPush'
               dockerfile: '$(Build.SourcesDirectory)/PocKube.API/Dockerfile'
               buildContext: '$(Build.ArtifactStagingDirectory)/publish'
+              arguments: |
+                --build-arg DOCKER_EXPOSE_PORT=$(DOCKER_EXPOSE_PORT)              
               tags: |
                 $(Build.BuildNumber)
                 latest
