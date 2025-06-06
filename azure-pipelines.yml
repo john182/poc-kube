@@ -111,7 +111,7 @@ stages:
                   artifact: poc-kub-api
                 - script: |
                     echo "Listando arquivos em $(Pipeline.Workspace)/poc-kub-api/Kubernetes"
-                    ls -la $(Pipeline.Workspace)/poc-kub-api/Kubernetes
+                    ls -la $(Pipeline.Workspace)/poc-kub-api/
                   displayName: 'Verificar arquivos do artefato'
                   
                 # Deploy do Secret (imagePullSecret)
