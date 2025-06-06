@@ -113,17 +113,17 @@ stages:
                     action: deploy
                     manifests: '$(Pipeline.Workspace)/k8s-manifests/secret.yaml'
 
-                # Deploy do app com deployment e service e referenciando o secret
-                - task: KubernetesManifest@0
-                  displayName: Deploy App to Kubernetes
+                # Deploy do app com deployment e service e referenciando o secret   
+                - task: KubernetesManifest@1
+                  displayName: Deploy App to Kubernetes 
                   inputs:
-                    action: deploy
+                    action: 'deploy'
                     connectionType: 'kubernetesServiceConnection'
                     kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
                     manifests: |
                       $(Pipeline.Workspace)/k8s-manifests/deployment.yaml
                       $(Pipeline.Workspace)/k8s-manifests/service.yaml
-                    imagePullSecrets: |
-                      regcred
                     containers: |
                       $(CONTAINER_REPOSITORY):$(IMAGE_TAG)
+                    imagePullSecrets: |
+                      regcred
