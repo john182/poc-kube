@@ -75,7 +75,7 @@ stages:
               repository: 'johnvanderson/poc-kube'
               command: 'buildAndPush'
               dockerfile: '$(Build.SourcesDirectory)/PocKube.API/Dockerfile'
-              buildContext: '$(Build.ArtifactStagingDirectory)/publish'
+              buildContext: '$(Build.ArtifactStagingDirectory)/publish/PocKube.API'
               arguments: |
                 --build-arg DOCKER_EXPOSE_PORT=$(DOCKER_EXPOSE_PORT)              
               tags: |
