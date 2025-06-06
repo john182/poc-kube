@@ -65,7 +65,7 @@ stages:
               publishWebProjects: false
               projects: |
                 $(API_PROJECT_PATH)
-              arguments: '--configuration $(CONFIGURATION) --runtime $(RUNTIME) --self-contained --output $(Build.ArtifactStagingDirectory)'
+              arguments: '--configuration $(CONFIGURATION) --runtime $(RUNTIME) --self-contained --output $(Build.ArtifactStagingDirectory)/publish'
               zipAfterPublish: false
 
           - task: Docker@2
@@ -75,7 +75,7 @@ stages:
               repository: 'johnvanderson/poc-kube'
               command: 'buildAndPush'
               dockerfile: '$(Build.SourcesDirectory)/PocKube.API/Dockerfile'
-              buildContext: '$(Build.ArtifactStagingDirectory)'
+              buildContext: '$(Build.ArtifactStagingDirectory)/publish'
               tags: |
                 $(Build.BuildNumber)
                 latest
