@@ -109,7 +109,11 @@ stages:
                 # Baixa os artefatos publicados
                 - download: current
                   artifact: poc-kub-api
-
+                - script: |
+                    echo "Listando arquivos em $(Pipeline.Workspace)/poc-kub-api/Kubernetes"
+                    ls -la $(Pipeline.Workspace)/poc-kub-api/Kubernetes
+                  displayName: 'Verificar arquivos do artefato'
+                  
                 # Deploy do Secret (imagePullSecret)
                 - task: KubernetesManifest@1
                   displayName: Deploy Kubernetes Secret
