@@ -122,6 +122,7 @@ stages:
                   inputs:
                     action: deploy
                     kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
+                    namespace: $(AKS_LABEL)
                     manifests: '$(Pipeline.Workspace)/poc-kub-api/secret.yml'
 
                 # Deploy do app
@@ -130,6 +131,7 @@ stages:
                   inputs:
                     action: deploy
                     kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
+                    namespace: $(AKS_LABEL)
                     manifests: |
                       $(Pipeline.Workspace)/poc-kub-api/deployment.yaml
                       $(Pipeline.Workspace)/poc-kub-api/service.yaml
