@@ -106,13 +106,17 @@ stages:
           runOnce:
             deploy:
               steps:
+                # Baixa os artefatos publicados
+                - download: current
+                  artifact: poc-kub-api
+
                 # Deploy do Secret (imagePullSecret)
                 - task: KubernetesManifest@1
                   displayName: Deploy Kubernetes Secret
                   inputs:
                     action: deploy
                     kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
-                    manifests: '$(Pipeline.Workspace)/k8s-manifests/secret.yaml'
+                    manifests: '$(Pipeline.Workspace)/poc-kub-api/secret.yml'
 
                 # Deploy do app
                 - task: KubernetesManifest@1
@@ -121,8 +125,8 @@ stages:
                     action: deploy
                     kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
                     manifests: |
-                      $(Pipeline.Workspace)/k8s-manifests/deployment.yaml
-                      $(Pipeline.Workspace)/k8s-manifests/service.yaml
+                      $(Pipeline.Workspace)/poc-kub-api/deployment.yaml
+                      $(Pipeline.Workspace)/poc-kub-api/service.yaml
                     containers: |
                       $(CONTAINER_REPOSITORY):$(IMAGE_TAG)
                     imagePullSecrets: |
