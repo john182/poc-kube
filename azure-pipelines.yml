@@ -86,6 +86,10 @@ stages:
               sources: |
                 configmap.yml
                 secret.yml
+                deployment.yml
+                service.yml
+                ingress.yml
+                hpa.yml
 
           - task: PublishBuildArtifacts@1
             displayName: 'azdevops publish build artifacts'
@@ -110,16 +114,20 @@ stages:
                 - download: current
                   artifact: poc-kub-api
                 - script: |
-                    echo "Listando arquivos em $(Pipeline.Workspace)/poc-kub-api"
-                    ls -la $(Pipeline.Workspace)/poc-kub-api/
-                  displayName: 'Verificar arquivos do artefato'
+                    echo "Listando conteúdo da pasta"
+                    ls -l $(Pipeline.Workspace)/poc-kub-api
+                    echo "Conteúdo do secret.yml"
+                    cat $(Pipeline.Workspace)/poc-kub-api/secret.yml
+                  displayName: 'Verificar arquivos do artefato'          
+
                   
                 # Deploy do Secret (imagePullSecret)
                 - task: KubernetesManifest@1
                   displayName: Deploy Kubernetes Secret
                   inputs:
                     action: deploy
-                    kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
+                    kubernetesServiceConnection: 'KubExterno'
+                    namespace: $(AKS_LABEL)
                     manifests: '$(Pipeline.Workspace)/poc-kub-api/secret.yml'
 
                 # Deploy do app
@@ -127,12 +135,15 @@ stages:
                   displayName: Deploy App to Kubernetes 
                   inputs:
                     action: deploy
-                    kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
+                    kubernetesServiceConnection: 'KubExterno'
+                    namespace: $(AKS_LABEL)
                     manifests: |
-                      $(Pipeline.Workspace)/poc-kub-api/deployment.yaml
-                      $(Pipeline.Workspace)/poc-kub-api/service.yaml
+                       $(Pipeline.Workspace)/poc-kub-api/configmap.yml
+                       $(Pipeline.Workspace)/poc-kub-api/deployment.yml
+                       $(Pipeline.Workspace)/poc-kub-api/service.yml
+                       $(Pipeline.Workspace)/poc-kub-api/ingress.yml
+                       $(Pipeline.Workspace)/poc-kub-api/hpa.yml
                     containers: |
                       $(CONTAINER_REPOSITORY):$(IMAGE_TAG)
                     imagePullSecrets: |
                       regcred
-                      
