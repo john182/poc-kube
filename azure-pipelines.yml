@@ -106,19 +106,19 @@ stages:
           runOnce:
             deploy:
               steps:
-                # Primeiro deploy do Secret (imagePullSecret)
-                - task: KubernetesManifest@0
+                # Deploy do Secret (imagePullSecret)
+                - task: KubernetesManifest@1
                   displayName: Deploy Kubernetes Secret
                   inputs:
                     action: deploy
+                    kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
                     manifests: '$(Pipeline.Workspace)/k8s-manifests/secret.yaml'
 
-                # Deploy do app com deployment e service e referenciando o secret   
+                # Deploy do app
                 - task: KubernetesManifest@1
                   displayName: Deploy App to Kubernetes 
                   inputs:
-                    action: 'deploy'
-                    connectionType: 'kubernetesServiceConnection'
+                    action: deploy
                     kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
                     manifests: |
                       $(Pipeline.Workspace)/k8s-manifests/deployment.yaml
