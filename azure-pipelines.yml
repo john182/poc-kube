@@ -116,7 +116,7 @@ stages:
                   inputs:
                     action: deploy
                     kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
-                    manifests: '$(Pipeline.Workspace)/poc-kub-api/secret.yml'
+                    manifests: '$(Pipeline.Workspace)/poc-kub-api/Kubernetes/secret.yml'
 
                 # Deploy do app
                 - task: KubernetesManifest@1
@@ -125,9 +125,10 @@ stages:
                     action: deploy
                     kubernetesServiceConnection: 'staging-dev-test-cluster-azure-arc-1748737523130'
                     manifests: |
-                      $(Pipeline.Workspace)/poc-kub-api/deployment.yaml
-                      $(Pipeline.Workspace)/poc-kub-api/service.yaml
+                      $(Pipeline.Workspace)/poc-kub-api/Kubernetes/deployment.yaml
+                      $(Pipeline.Workspace)/poc-kub-api/Kubernetes/service.yaml
                     containers: |
                       $(CONTAINER_REPOSITORY):$(IMAGE_TAG)
                     imagePullSecrets: |
                       regcred
+                      
