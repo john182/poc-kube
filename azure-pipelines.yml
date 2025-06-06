@@ -110,8 +110,10 @@ stages:
                 - download: current
                   artifact: poc-kub-api
                 - script: |
-                    echo "Listando arquivos em $(Pipeline.Workspace)/poc-kub-api"
-                    ls -la $(Pipeline.Workspace)/poc-kub-api/
+                    echo "Listando conteúdo da pasta"
+                    ls -l $(Pipeline.Workspace)/poc-kub-api
+                    echo "Conteúdo do secret.yml"
+                    cat $(Pipeline.Workspace)/poc-kub-api/secret.yml
                   displayName: 'Verificar arquivos do artefato'
                   
                 # Deploy do Secret (imagePullSecret)
