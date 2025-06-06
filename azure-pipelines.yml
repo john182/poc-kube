@@ -86,6 +86,10 @@ stages:
               sources: |
                 configmap.yml
                 secret.yml
+                deployment.yml
+                service.yml
+                ingress.yml
+                hpa.yml
 
           - task: PublishBuildArtifacts@1
             displayName: 'azdevops publish build artifacts'
@@ -114,15 +118,7 @@ stages:
                     ls -l $(Pipeline.Workspace)/poc-kub-api
                     echo "Conteúdo do secret.yml"
                     cat $(Pipeline.Workspace)/poc-kub-api/secret.yml
-                  displayName: 'Verificar arquivos do artefato'
-
-                - task: KubernetesManifest@1
-                  displayName: Deploy Kubernetes namespace
-                  inputs:
-                    action: deploy
-                    kubernetesServiceConnection: 'KubExterno'
-                    namespace: $(AKS_LABEL)
-                    manifests: '$(Pipeline.Workspace)/poc-kub-api/secret.yml'
+                  displayName: 'Verificar arquivos do artefato'          
 
                   
                 # Deploy do Secret (imagePullSecret)
@@ -142,8 +138,11 @@ stages:
                     kubernetesServiceConnection: 'KubExterno'
                     namespace: $(AKS_LABEL)
                     manifests: |
-                      $(Pipeline.Workspace)/poc-kub-api/deployment.yaml
-                      $(Pipeline.Workspace)/poc-kub-api/service.yaml
+                       $(Pipeline.Workspace)/poc-kub-api/configmap.yml
+                       $(Pipeline.Workspace)/poc-kub-api/deployment.yml
+                       $(Pipeline.Workspace)/poc-kub-api/service.yml
+                       $(Pipeline.Workspace)/poc-kub-api/ingress.yml
+                       $(Pipeline.Workspace)/poc-kub-api/hpa.yml
                     containers: |
                       $(CONTAINER_REPOSITORY):$(IMAGE_TAG)
                     imagePullSecrets: |
