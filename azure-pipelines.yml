@@ -115,6 +115,15 @@ stages:
                     echo "Conteúdo do secret.yml"
                     cat $(Pipeline.Workspace)/poc-kub-api/secret.yml
                   displayName: 'Verificar arquivos do artefato'
+
+                - task: KubernetesManifest@1
+                  displayName: Deploy Kubernetes namespace
+                  inputs:
+                    action: deploy
+                    kubernetesServiceConnection: 'KubExterno'
+                    namespace: $(AKS_LABEL)
+                    manifests: '$(Pipeline.Workspace)/poc-kub-api/secret.yml'
+
                   
                 # Deploy do Secret (imagePullSecret)
                 - task: KubernetesManifest@1
