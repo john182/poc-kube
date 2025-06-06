@@ -22,13 +22,3 @@ spec:
             name: #{AKS_LABEL}#
             port:
               number: #{DOCKER_EXPOSE_PORT}#
-  - host: #{AKS_INGRESS_HOST_DR}#
-    http:
-      paths:
-      - path: #{AKS_SERVICE_PATH}#
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: #{AKS_LABEL}#
-            port:
-              number: #{DOCKER_EXPOSE_PORT}#
