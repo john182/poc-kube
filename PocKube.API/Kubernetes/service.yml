@@ -8,7 +8,7 @@ spec:
   ports:
    - protocol: TCP
      port: #{DOCKER_EXPOSE_PORT}#
-     targetPort: 5000
+     targetPort: #{DOCKER_EXPOSE_PORT}#
         
   
   selector:
