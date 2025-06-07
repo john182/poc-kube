@@ -12,15 +12,12 @@ builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
-if (!string.IsNullOrWhiteSpace(routeBase))
-{
-    app.UsePathBase($"/{routeBase.TrimStart('/')}"); 
-}
 
-// Middleware
-app.UseHealthChecks("/health");
+app.UsePathBase(routeBase);
+app.UseRouting();
 app.UseSwagger();
 app.UseSwaggerUI();
+app.UseHealthChecks("/health");
 
 // Exemplo de endpoint
 var summaries = new[]
