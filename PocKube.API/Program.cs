@@ -16,7 +16,11 @@ var app = builder.Build();
 app.UsePathBase(routeBase);
 app.UseRouting();
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1");
+    c.RoutePrefix = "swagger";
+});
 app.UseHealthChecks("/health");
 
 // Exemplo de endpoint
