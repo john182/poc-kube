@@ -2,22 +2,27 @@ using PocKube.API;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+// Carrega o valor da rota base a partir da configuração
+var routeBase = builder.Configuration["Api:Routes:Base"];
+
+// Adiciona serviços
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services
-    .AddHealthCheck();
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
-app.UseHealthChecks();
+if (!string.IsNullOrWhiteSpace(routeBase))
+{
+    app.UsePathBase($"/{routeBase.TrimStart('/')}"); 
+}
 
+// Middleware
+app.UseHealthChecks("/health");
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
+// Exemplo de endpoint
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
