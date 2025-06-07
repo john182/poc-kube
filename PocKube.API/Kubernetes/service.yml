@@ -6,6 +6,10 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-  - port: #{DOCKER_EXPOSE_PORT}#
+   - protocol: TCP
+     port: #{DOCKER_EXPOSE_PORT}#
+     targetPort: 5000
+        
+  
   selector:
     app: #{AKS_LABEL}#
